@@ -1,6 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axiosApi from "../../axiosApi";
-import {IGetTask, ITask} from "../../types";
+import {IForm, IGetTask, ITask} from "../../types";
 
 export const fetchToDo = createAsyncThunk(
     "todo/fetch",
@@ -15,6 +15,27 @@ export const fetchToDo = createAsyncThunk(
             });
         }
 
-        return newTasks
+        return newTasks;
+    },
+);
+
+export const postToDo = createAsyncThunk<void, IForm>(
+    "post/fetch",
+    async (data) => {
+        await axiosApi.post("/tasks.json", data);
+    },
+)
+
+export const deleteToDo = createAsyncThunk(
+    'delete/fetch',
+    async (id: string) => {
+            await axiosApi.delete(`/tasks/${id}.json`);
+    },
+);
+
+export const putToDo = createAsyncThunk(
+    "put/fetch",
+    async (data: IForm) => {
+        await axiosApi.put(`/tasks/.json`, data);
     },
 );

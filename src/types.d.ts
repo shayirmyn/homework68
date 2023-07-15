@@ -4,6 +4,11 @@ export interface ITask {
     status: boolean;
 }
 
+export interface IForm {
+    title: string;
+    status: boolean;
+}
+
 export interface IGetTask {
     [id: string]: ITask;
 }
