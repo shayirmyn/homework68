@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {fetchToDo} from "./todolistThunk";
 import {useAppDispatch} from "../../app/hooks";
 import {useSelector} from "react-redux";
 import {RootState} from "../../app/store";
 import Spinner from "../../components/Spinner/Spinner";
+import axiosApi from "../../axiosApi";
 
 const ToDoList = () => {
 
@@ -17,7 +18,14 @@ const ToDoList = () => {
 
     const fetchLoading = useSelector((state: RootState) => state.todo.fetchLoading);
 
-
+    const deleteRequest = useCallback(async (id: string) => {
+        try {
+            await axiosApi.delete(`/tasks/${id}.json`);
+            dispatch(fetchToDo());
+        } catch (e) {
+            console.error(e);
+        }
+    }, [dispatch]);
 
 
     return (
@@ -58,7 +66,7 @@ const ToDoList = () => {
                                 <div>{every.status ? (<span>done</span>) : (<span>not done</span>)}</div>
                                 <button
                                     className="btn btn-danger ms-auto d-block mt-3 me-2"
-
+                                    onClick={() => deleteRequest(every.id)}
                                 >
                                     delete
                                 </button>
