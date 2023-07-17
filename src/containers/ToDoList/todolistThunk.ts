@@ -1,12 +1,13 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axiosApi from "../../axiosApi";
 import {IForm, IGetTask, ITask} from "../../types";
+import {RootState} from "../../app/store";
 
 export const fetchToDo = createAsyncThunk(
-    "todo/fetch",
+    "get/fetch",
     async () => {
-        const responce = await axiosApi.get<IGetTask | null>("/tasks.json");
-        const tasks = responce.data;
+        const request = await axiosApi.get<IGetTask | null>("/tasks.json");
+        const tasks = request.data;
         let newTasks: ITask[] = [];
 
         if (tasks) {
@@ -33,9 +34,14 @@ export const deleteToDo = createAsyncThunk(
     },
 );
 
-export const putToDo = createAsyncThunk(
+export const putToDo = createAsyncThunk<void, string, {state: RootState}>(
     "put/fetch",
-    async (data: IForm) => {
-        await axiosApi.put(`/tasks/.json`, data);
+    async (id,thunkAPI) => {
+        const tasks = thunkAPI.getState().todo.items;
+        const currentTask = tasks.find(item => item.id === id)!;
+        await axiosApi.put(`/tasks/${id}.json`, {
+            title: currentTask.title,
+            status: !currentTask.status,
+        });
     },
 );

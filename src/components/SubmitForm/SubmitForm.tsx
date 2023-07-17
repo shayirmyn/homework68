@@ -1,34 +1,27 @@
 import React, {useState} from 'react';
 import Spinner from "../Spinner/Spinner";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {IForm} from "../../types";
 import {fetchToDo, postToDo} from "../../containers/ToDoList/todolistThunk";
 
-interface IProps {
-    state: IForm;
-}
 
-const SubmitForm: React.FC<IProps> = ({state}) => {
+const SubmitForm = () => {
 
     const dispatch = useAppDispatch();
 
     const fetchLoading = useAppSelector(state => state.todo.fetchLoading);
 
-    const [submitData, setSubmitData] = useState<IForm>(state);
+    const [title, setTitle] = useState<string>('');
 
     const dataChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
-
-        const {name, value} = event.target;
-
-        setSubmitData((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+        setTitle(event.target.value);
     };
 
     const postRequest = async (event: React.FormEvent) => {
         event.preventDefault();
-        await dispatch(postToDo(submitData));
+        await dispatch(postToDo({
+            title,
+            status: false,
+        }));
         await dispatch(fetchToDo());
     };
 
