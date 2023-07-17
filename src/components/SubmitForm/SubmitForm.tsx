@@ -2,13 +2,13 @@ import React, {useState} from 'react';
 import Spinner from "../Spinner/Spinner";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {fetchToDo, postToDo} from "../../containers/ToDoList/todolistThunk";
-
+import BtnSpinner from "../Spinner/BtnSpinner/BtnSpinner";
 
 const SubmitForm = () => {
 
     const dispatch = useAppDispatch();
 
-    const fetchLoading = useAppSelector(state => state.todo.fetchLoading);
+    const loading = useAppSelector(state => state.todo);
 
     const [title, setTitle] = useState<string>('');
 
@@ -30,7 +30,7 @@ const SubmitForm = () => {
             <div className="col-9 m-auto mt-5 mb-5">
                 <h4>Submit a new task</h4>
                 {
-                    fetchLoading ? (<Spinner />) :
+                    loading.fetchLoading ? (<Spinner />) :
                         <form onSubmit={postRequest}>
                             <div className="form-group mt-3">
                                 <label htmlFor="title">Title</label>
@@ -47,8 +47,9 @@ const SubmitForm = () => {
                             <button
                                 type="submit"
                                 className="btn btn-primary ms-auto d-block mt-3 me-2"
+                                disabled={loading.postLoading}
                             >
-                                Send
+                                {loading.postLoading ? <BtnSpinner /> : (<span>send</span>)}
                             </button>
                         </form>
                 }

@@ -25,7 +25,7 @@ export const postToDo = createAsyncThunk<void, IForm>(
     async (data) => {
         await axiosApi.post("/tasks.json", data);
     },
-)
+);
 
 export const deleteToDo = createAsyncThunk(
     'delete/fetch',
